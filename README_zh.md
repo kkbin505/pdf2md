@@ -153,7 +153,7 @@ python pdf2md.py notes.pdf --provider gemini --api-key AIzaSyxxxxxxxxxxxxxx
 - [千问结果](example/Scratch_qwen.md) - 性价比最优，效果出色
 - [OpenAI 结果](example/Scratch_openai.md) - 准确度最高
 - [Gemini 结果](example/Scratch_gemini.md) - 速度快，新特性支持
-- [Claude 结果](example/Scratch_claude.md) - 性能均衡
+- [Claude 结果](example/Scratch_Claude.md) - 性能均衡
 
 对比各个模型的识别结果，选择最适合你的方案！
 
