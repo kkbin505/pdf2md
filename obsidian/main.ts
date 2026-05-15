@@ -30,6 +30,17 @@ export default class PDF2MDPlugin extends Plugin {
     this.addSettingTab(new PDF2MDSettingTab(this.app, this));
 
     this.registerEvent(
+      this.app.workspace.on('file-menu', (menu, file) => {
+        if (file instanceof TFile && file.extension === 'pdf') {
+          menu.addItem(item =>
+            item
+              .setTitle('Convert to Markdown')
+              .setIcon('file-text')
+              .onClick(() => this.convertPdf(file))
+          );
+        }
+      })
+    );
       this.app.vault.on('create', (file: TFile) => {
         if (file.extension === 'pdf') {
           this.addFileContextMenu();
