@@ -144,7 +144,7 @@ See how different models handle the same handwritten content:
 - [Qwen Result](example/Scratch_qwen.md) - Cost-effective, excellent quality
 - [OpenAI Result](example/Scratch_openai.md) - Highest accuracy
 - [Gemini Result](example/Scratch_gemini.md) - Fast, new features
-- [Claude Result](example/Scratch_claude.md) - Balanced performance
+- [Claude Result](example/Scratch_Claude.md) - Balanced performance
 
 Compare the results to choose the best model for your use case!
 
