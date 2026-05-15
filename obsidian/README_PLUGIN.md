@@ -318,7 +318,7 @@ MIT
 
 ## Changelog
 
-### v1.0.0 (2025-05-15)
+### v0.1.0 (2025-05-15)
 - ✨ Initial Obsidian plugin release
 - Support for Qwen and OpenAI models
 - Complete settings panel with real-time progress
