@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+venv/
+.venv/
+build/
+dist/
+*.egg-info/
+.vscode/
+.idea/
+optimalcontrolHW3.pdf
+optimalcontrolHW3.md
+PLAN.md
