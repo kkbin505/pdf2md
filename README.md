@@ -1,8 +1,55 @@
 # pdf2md
 
+Convert handwritten notes to Markdown with LaTeX formulas using AI. Available as both a **Command-Line Tool** and **Obsidian Plugin**.
+
+**[中文文档](README_ZH.md)** | **English**
+
+## 📂 Project Structure
+
+```
+pdf2md/
+├── python/              # Python Command-Line Tool
+│   ├── pdf2md.py        # Main script
+│   ├── requirements.txt  # Dependencies
+│   ├── .env.example     # Environment variable template
+│   └── example/         # Example PDFs and results
+│
+└── obsidian/            # Obsidian Plugin
+    ├── src/             # TypeScript source code
+    ├── main.ts          # Plugin entry point
+    ├── manifest.json    # Plugin metadata
+    ├── package.json     # npm configuration
+    └── README_PLUGIN_ZH.md  # Plugin documentation
+```
+
+## 🚀 Quick Start
+
+### Option 1: Python Command-Line Tool
+**Recommended for**: Batch processing, automation, server environments
+
+1. Go to the `python/` directory
+2. Follow [Python Installation Guide](python#installation)
+3. Run: `python pdf2md.py your_notes.pdf`
+
+→ **[See Python Tool Documentation](python/README.md)**
+
+### Option 2: Obsidian Plugin
+**Recommended for**: Obsidian users, interactive use, individual conversions
+
+1. Go to Obsidian Settings → Community Plugins
+2. Search for "PDF2MD" and install
+3. Configure API key in plugin settings
+4. Right-click PDF → "Convert to Markdown"
+
+→ **[See Obsidian Plugin Documentation](obsidian/README_PLUGIN_ZH.md)**
+
+---
+
+# pdf2md
+
 A tool that converts handwritten notes into Markdown with LaTeX formulas using multiple vision APIs (OpenAI, Claude, Gemini, Qwen).
 
-**[中文文档](README_zh.md)** | **English**
+**[中文文档](README_ZH.md)** | **English**
 
 ---
 
