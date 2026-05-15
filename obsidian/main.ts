@@ -7,6 +7,7 @@ import { OpenAICompatibleProvider } from './src/providers/openai-compat';
 
 export default class PDF2MDPlugin extends Plugin {
   settings: PDF2MDSettings;
+  private apiKeys: Map<string, string> = new Map();  // Store API keys in memory
 
   private setupPdfWorker() {
     // Use CDN as primary source (most reliable in Obsidian)
@@ -18,10 +19,14 @@ export default class PDF2MDPlugin extends Plugin {
   }
 
   async onload() {
-    // Setup PDF.js worker with multiple fallback strategies
+    // Setup PDF.js worker
     this.setupPdfWorker();
 
     await this.loadSettings();
+
+    // Load API keys from environment variables
+    this.loadApiKeysFromEnv();
+
     this.addSettingTab(new PDF2MDSettingTab(this.app, this));
 
     this.registerEvent(
@@ -35,6 +40,38 @@ export default class PDF2MDPlugin extends Plugin {
     this.app.workspace.onLayoutReady(() => {
       this.addFileContextMenu();
     });
+  }
+
+  private loadApiKeysFromEnv() {
+    const envVars = {
+      'openai': 'OPENAI_API_KEY',
+      'qwen': 'DASHSCOPE_API_KEY',
+    };
+
+    for (const [provider, envVar] of Object.entries(envVars)) {
+      const value = this.getEnvValue(envVar);
+      if (value) {
+        this.apiKeys.set(provider, value);
+        console.log(`✓ Loaded ${envVar}`);
+      } else {
+        console.warn(`⚠️ ${envVar} not found in environment variables`);
+      }
+    }
+  }
+
+  private getEnvValue(envVarName: string): string | null {
+    try {
+      if (typeof process !== 'undefined' && process.env) {
+        return process.env[envVarName] || null;
+      }
+    } catch (e) {
+      // Silently fail
+    }
+    return null;
+  }
+
+  private getApiKey(provider: string): string | null {
+    return this.apiKeys.get(provider) || null;
   }
 
   private addFileContextMenu() {
@@ -52,12 +89,26 @@ export default class PDF2MDPlugin extends Plugin {
 
   private async convertPdf(file: TFile) {
     try {
+      // Check if API key is configured
+      const apiKey = this.getApiKey(this.settings.provider);
+      if (!apiKey) {
+        const envVar = this.settings.provider === 'openai' ? 'OPENAI_API_KEY' : 'DASHSCOPE_API_KEY';
+        const providerName = this.settings.provider === 'openai' ? 'OpenAI' : 'Alibaba Qwen';
+
+        new Notice(
+          `❌ ${providerName} API Key not configured!\n\nPlease set environment variable: ${envVar}\n\nThen restart Obsidian.`,
+          10000
+        );
+        console.error(`API Key missing. Environment variable: ${envVar}`);
+        return;
+      }
+
       const notice = new Notice('Starting PDF conversion...', 0);
 
       const data = await this.app.vault.readBinary(file);
       const pdfBuffer = data;
 
-      const provider = this.createProvider();
+      const provider = this.createProvider(apiKey);
       const converter = new PDFConverter(provider, {
         timeout: this.settings.timeout * 1000,
         maxRetries: this.settings.maxRetries,
@@ -98,7 +149,16 @@ export default class PDF2MDPlugin extends Plugin {
       setTimeout(() => notice.hide(), 3000);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      new Notice(`Error: ${message}`, 10000);
+
+      // Provide helpful error messages
+      if (message.includes('Unauthorized') || message.includes('API key')) {
+        new Notice(`❌ API Error: Invalid or expired API key. Please check your environment variables.`, 10000);
+      } else if (message.includes('timeout')) {
+        new Notice(`❌ Conversion timeout. Try increasing timeout in plugin settings or use a faster model.`, 10000);
+      } else {
+        new Notice(`Error: ${message}`, 10000);
+      }
+
       console.error('Conversion error:', error);
     }
   }
@@ -145,14 +205,14 @@ export default class PDF2MDPlugin extends Plugin {
     return `[${bar}] ${percent}%`;
   }
 
-  private createProvider(): ModelProvider {
+  private createProvider(apiKey: string): ModelProvider {
     const settings = this.settings;
 
     switch (settings.provider) {
       case 'openai':
         return new OpenAICompatibleProvider(
           {
-            apiKey: settings.openaiApiKey,
+            apiKey: apiKey,
             model: settings.openaiModel,
           },
           'https://api.openai.com/v1'
@@ -161,7 +221,7 @@ export default class PDF2MDPlugin extends Plugin {
       case 'qwen':
         return new OpenAICompatibleProvider(
           {
-            apiKey: settings.qwenApiKey,
+            apiKey: apiKey,
             model: settings.qwenModel,
           },
           'https://dashscope.aliyuncs.com/compatible-mode/v1'

@@ -51,25 +51,62 @@
 
 ## Quick Start
 
-### 1️⃣ Configure AI Model and API Key
+### 1️⃣ Configure Environment Variables
 
-Open Obsidian Settings → PDF2MD to see these options:
+**Important:** PDF2MD reads API keys from environment variables only. No API keys are stored on disk. This is more secure.
+
+#### Get Your API Keys
+
+**Alibaba Qwen (Recommended):**
+1. Visit [DashScope Console](https://dashscope.console.aliyun.com/apiKey)
+2. Sign in or create an Alibaba Cloud account
+3. Create and copy your API key
+
+**OpenAI:**
+1. Visit [OpenAI API Keys](https://platform.openai.com/api-keys)
+2. Sign in to your OpenAI account
+3. Create and copy your API key
+
+#### Set Environment Variables
+
+**Windows (PowerShell - Run as Administrator):**
+```powershell
+# Alibaba Qwen
+[System.Environment]::SetEnvironmentVariable('DASHSCOPE_API_KEY', 'sk-xxx...', 'User')
+
+# OpenAI
+[System.Environment]::SetEnvironmentVariable('OPENAI_API_KEY', 'sk-proj-xxx...', 'User')
+```
+
+**Mac/Linux:**
+```bash
+# Edit ~/.bashrc or ~/.zshrc (Mac users use ~/.zprofile), add:
+export DASHSCOPE_API_KEY='sk-xxx...'
+export OPENAI_API_KEY='sk-proj-xxx...'
+
+# Save and reload:
+source ~/.bashrc  # or source ~/.zshrc
+```
+
+#### Restart Obsidian
+
+After setting environment variables, **completely restart Obsidian** (not just reload the plugin).
+
+In plugin settings, you'll see:
+- ✓ Found - API Key is configured
+- ✗ Not found - Environment variable not found
+
+### 2️⃣ Select AI Provider
+
+Open Obsidian Settings → PDF2MD:
 
 **Select AI Provider:**
 - **Recommended:** Alibaba Qwen (cheap, ¥0.00345/page)
-- **Alternative:** OpenAI GPT-4o Mini (fast, ¥0.003/page)
+- **Alternative:** OpenAI GPT (fast, ¥0.003/page)
 
-**Add API Key:**
+**Choose Model:** Customizable, defaults are pre-set.
 
-**Method A: Direct Entry (Recommended for Beginners)**
-- Paste your API key directly in settings
-- Plugin will mask it for security (shows only first 4 characters)
-
-**Method B: Environment Variables (Recommended for Developers)**
-- Set system environment variables to avoid storing sensitive data in plugin
-- Plugin automatically loads from env vars
-
-### 2️⃣ Convert PDF to Markdown
+### 3️⃣ Convert PDF to Markdown
 
 1. Find your PDF file in Obsidian file browser
 2. Right-click on the file
@@ -84,31 +121,16 @@ Output: my_notes_qwen.md   (if using Qwen)
         my_notes_gpt.md    (if using OpenAI)
 ```
 
-## Getting API Keys
+## Cost Information
 
-### 🟡 Alibaba Qwen (DashScope)
+### Price Comparison (A4 page, 200 DPI)
 
-**Recommended: Most cost-effective, suitable for daily use**
-
-1. Visit [DashScope Console](https://dashscope.console.aliyun.com/apiKey)
-2. Sign in or create an Alibaba Cloud account (supports Taobao/AliPay login)
-3. Create a new API key
-4. Copy the key and paste it in plugin settings
-
-**Cost:** ~¥0.00345/page (3 pages per cent)
+| Provider | Model | Cost/Page | Speed | Quality |
+|---|---|---|---|---|
+| **Alibaba Qwen** 🏆 | qwen-vl-max | ¥0.00345 | 15-30s | Excellent |
+| **OpenAI** | gpt-5.4-mini | ¥0.003 | 5-10s | Excellent+ |
 
 **New users get free credits!**
-
-### 🔵 OpenAI
-
-**Alternative: Fast processing, highest recognition accuracy**
-
-1. Visit [OpenAI API Keys](https://platform.openai.com/api-keys)
-2. Sign in to your OpenAI account
-3. Create a new API key
-4. Copy the key and paste it in plugin settings
-
-**Cost:** ~$0.003/page (token-based pricing)
 
 ## Settings Explained
 
@@ -117,6 +139,7 @@ Output: my_notes_qwen.md   (if using Qwen)
 | Option | Default | Description |
 |---|---|---|
 | **AI Provider** | Qwen | Choose your AI model provider |
+| **API Key Status** | Detects from env var | Shows environment variable configuration (read-only) |
 | **Model Name** | qwen-vl-max | Specific model to use (customizable) |
 | **PDF Rendering DPI** | 200 | Higher DPI = better quality but slower (range: 100-400) |
 | **API Timeout** | 60 seconds | Maximum wait time for API response |
@@ -186,12 +209,20 @@ If results aren't satisfactory:
 
 ## FAQ
 
+### Q: Plugin shows "API Key not configured"?
+
+A: API Key is not being read from environment variables. Check:
+- ✓ Environment variable is set correctly (`DASHSCOPE_API_KEY` or `OPENAI_API_KEY`)
+- ✓ Did you restart Obsidian? (Complete restart required, not just reload plugin)
+- ✓ Variable name spelled correctly (case-sensitive)
+- ✓ Plugin settings show ✓ Found for your provider
+
 ### Q: Conversion fails with "API Error"?
 
 A: Check these items:
-- ✓ API Key is correct (copy carefully, no extra spaces)
-- ✓ Account has remaining balance or quota
+- ✓ API Key is valid and has remaining quota
 - ✓ Network connection is stable
+- ✓ Account quota hasn't been exceeded
 - ✓ Check Developer Console for detailed error info
 
 **Open Developer Console:**
@@ -236,30 +267,6 @@ A: You need to enable math rendering:
 
 **Recommended:** Use Obsidian's built-in math support or install a dedicated math plugin.
 
-### Q: How do I use environment variables to store API keys?
-
-A: This avoids storing sensitive keys directly in plugin settings.
-
-**Windows (PowerShell):**
-```powershell
-# Alibaba Qwen
-[System.Environment]::SetEnvironmentVariable('DASHSCOPE_API_KEY', 'sk-xxxx', 'User')
-
-# OpenAI
-[System.Environment]::SetEnvironmentVariable('OPENAI_API_KEY', 'sk-xxxx', 'User')
-```
-
-**Mac/Linux:**
-```bash
-# Edit ~/.bashrc or ~/.zshrc, add:
-export DASHSCOPE_API_KEY=sk-xxxx
-export OPENAI_API_KEY=sk-xxxx
-
-# Reload config
-source ~/.bashrc
-```
-
-**After setting env vars, restart Obsidian and they'll be auto-loaded.**
 
 ## Troubleshooting
 

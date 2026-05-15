@@ -3,9 +3,7 @@ import PDF2MDPlugin from '../main';
 
 export interface PDF2MDSettings {
   provider: 'openai' | 'qwen';
-  openaiApiKey: string;
   openaiModel: string;
-  qwenApiKey: string;
   qwenModel: string;
   dpi: number;
   timeout: number;
@@ -15,9 +13,7 @@ export interface PDF2MDSettings {
 
 export const DEFAULT_SETTINGS: PDF2MDSettings = {
   provider: 'qwen',
-  openaiApiKey: '',
   openaiModel: 'gpt-5.4-mini',
-  qwenApiKey: '',
   qwenModel: 'qwen-vl-max',
   dpi: 200,
   timeout: 60,
@@ -37,14 +33,25 @@ export class PDF2MDSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
+    // 🔒 Security notice
+    const securityNotice = containerEl.createDiv('pdf2md-security-notice');
+    securityNotice.innerHTML = `
+      <div style="margin-bottom: 20px; padding: 12px; background: #f0f7ff; border-left: 4px solid #2196f3; border-radius: 4px;">
+        <strong>🔒 Security:</strong> API keys are read from environment variables only.
+        <strong>No API keys are stored on disk.</strong>
+        <br/>
+        <small>See <a href="https://github.com/kkbin505/pdf2md/tree/main/obsidian">documentation</a> for setup instructions.</small>
+      </div>
+    `;
+
     // Provider selection
     new Setting(containerEl)
       .setName('AI Provider')
       .setDesc('Choose which AI provider to use for recognition')
       .addDropdown(dropdown =>
         dropdown
-          .addOption('qwen', 'Alibaba (Qwen VL - Recommended, Cheapest)')
-          .addOption('openai', 'OpenAI (GPT-5.4 Mini)')
+          .addOption('qwen', 'Alibaba Qwen (DASHSCOPE_API_KEY)')
+          .addOption('openai', 'OpenAI (OPENAI_API_KEY)')
           .setValue(this.plugin.settings.provider)
           .onChange(async value => {
             this.plugin.settings.provider = value as any;
@@ -127,23 +134,22 @@ export class PDF2MDSettingTab extends PluginSettingTab {
   }
 
   private displayProviderSettings(): void {
-    const { containerEl } = this;
     const provider = this.plugin.settings.provider;
 
     switch (provider) {
       case 'openai':
         this.addProviderSetting(
-          'OpenAI API Key',
+          'OpenAI API Key Status',
           'Get from https://platform.openai.com/api-keys',
-          'openaiApiKey',
+          'OPENAI_API_KEY',
           'openaiModel'
         );
         break;
       case 'qwen':
         this.addProviderSetting(
-          'Alibaba DashScope API Key',
+          'Alibaba DashScope API Key Status',
           'Get from https://dashscope.console.aliyun.com/apiKey',
-          'qwenApiKey',
+          'DASHSCOPE_API_KEY',
           'qwenModel'
         );
         break;
@@ -153,65 +159,45 @@ export class PDF2MDSettingTab extends PluginSettingTab {
   private addProviderSetting(
     keyLabel: string,
     keyDesc: string,
-    keyField: keyof PDF2MDSettings,
+    envVarName: string,
     modelField: keyof PDF2MDSettings
   ): void {
     const { containerEl } = this;
-    const envVarName = this.getEnvVarName(keyField as string);
     const envValue = this.getEnvValue(envVarName);
-    const isFromEnv = envValue && !this.plugin.settings[keyField];
 
-    const helpText = envValue
-      ? `✓ Using ${envVarName}`
-      : `Or set ${envVarName} environment variable`;
-
-    const currentKey = (this.plugin.settings[keyField] as string) || '';
-    const displayValue = this.maskApiKey(currentKey);
-
+    // Show API Key status (read-only)
     new Setting(containerEl)
       .setName(keyLabel)
-      .setDesc(`${keyDesc}\n${helpText}`)
+      .setDesc(`${keyDesc}\n**Environment Variable:** \`${envVarName}\``)
       .addText(text =>
         text
-          .setPlaceholder(envValue ? '(from env var)' : 'Enter your API key or set env var')
-          .setValue(displayValue)
-          .onChange(async value => {
-            // Only update if user is actually entering a new key (not just viewing masked)
-            if (value && !value.includes('*')) {
-              (this.plugin.settings[keyField] as string) = value;
-              await this.plugin.saveSettings();
-            }
-          })
+          .setPlaceholder('Loading from environment variable...')
+          .setValue(envValue ? '✓ Configured' : '✗ Not configured')
+          .setDisabled(true)
       )
       .addButton(button =>
         button
-          .setButtonText(currentKey ? 'Show' : 'Paste')
-          .onClick(async () => {
-            if (currentKey) {
-              // Copy to clipboard
-              await navigator.clipboard.writeText(currentKey);
-              new Notice('API Key copied to clipboard');
-            }
-          })
-      )
-      .addButton(button =>
-        button
-          .setButtonText(isFromEnv ? 'Using Env' : 'Load from Env')
+          .setButtonText(envValue ? '✓ Found' : '⚠️ Missing')
+          .setClass(envValue ? 'mod-cta' : 'mod-warning')
           .onClick(async () => {
             if (envValue) {
-              (this.plugin.settings[keyField] as string) = envValue;
-              await this.plugin.saveSettings();
-              this.display();
+              new Notice(`✓ ${envVarName} is configured`, 3000);
+            } else {
+              new Notice(
+                `⚠️ ${envVarName} not found.\n\nPlease set the environment variable and restart Obsidian.`,
+                5000
+              );
             }
           })
       );
 
+    // Model selection
     new Setting(containerEl)
-      .setName(`${keyLabel.replace(' API Key', '')} Model`)
-      .setDesc('Model name to use (can be customized)')
+      .setName(`Model`)
+      .setDesc('Model name to use (customizable)')
       .addText(text =>
         text
-          .setPlaceholder(this.getDefaultModel(keyField))
+          .setPlaceholder(this.getDefaultModel(modelField))
           .setValue((this.plugin.settings[modelField] as string) || '')
           .onChange(async value => {
             (this.plugin.settings[modelField] as string) = value;
@@ -228,17 +214,8 @@ export class PDF2MDSettingTab extends PluginSettingTab {
     return defaults[field as string] || '';
   }
 
-  private getEnvVarName(field: string): string {
-    const mapping: Record<string, string> = {
-      openaiApiKey: 'OPENAI_API_KEY',
-      qwenApiKey: 'DASHSCOPE_API_KEY',
-    };
-    return mapping[field] || field;
-  }
-
   private getEnvValue(envVarName: string): string | null {
     try {
-      // In Electron (desktop Obsidian), we can access process.env
       if (typeof process !== 'undefined' && process.env) {
         return process.env[envVarName] || null;
       }
@@ -246,11 +223,5 @@ export class PDF2MDSettingTab extends PluginSettingTab {
       // Silently fail if not in Electron environment
     }
     return null;
-  }
-
-  private maskApiKey(key: string): string {
-    if (!key) return '';
-    if (key.length <= 4) return key;
-    return key.substring(0, 4) + '*'.repeat(key.length - 4);
   }
 }

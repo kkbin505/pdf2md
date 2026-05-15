@@ -52,25 +52,62 @@
 
 ## 快速开始
 
-### 1️⃣ 配置 AI 模型和 API Key
+### 1️⃣ 配置环境变量
 
-打开 Obsidian 设置 → PDF2MD，你会看到以下选项：
+**重要：** PDF2MD 不在本地存储 API Key，只从环境变量读取。这样更安全。
+
+#### 获取 API Key
+
+**阿里千问 (推荐)：**
+1. 访问 [DashScope 控制台](https://dashscope.console.aliyun.com/apiKey)
+2. 登录或注册阿里云账号（支持淘宝/支付宝登录）
+3. 创建并复制 API Key
+
+**OpenAI：**
+1. 访问 [OpenAI API 密钥管理](https://platform.openai.com/api-keys)
+2. 登录 OpenAI 账号
+3. 创建并复制 API Key
+
+#### 设置环境变量
+
+**Windows (PowerShell - 以管理员身份运行)：**
+```powershell
+# 阿里千问
+[System.Environment]::SetEnvironmentVariable('DASHSCOPE_API_KEY', 'sk-xxx...', 'User')
+
+# OpenAI
+[System.Environment]::SetEnvironmentVariable('OPENAI_API_KEY', 'sk-proj-xxx...', 'User')
+```
+
+**Mac/Linux：**
+```bash
+# 编辑 ~/.bashrc 或 ~/.zshrc (Mac 用户用 ~/.zprofile)，添加：
+export DASHSCOPE_API_KEY='sk-xxx...'
+export OPENAI_API_KEY='sk-proj-xxx...'
+
+# 保存后，重新加载配置：
+source ~/.bashrc  # 或 source ~/.zshrc
+```
+
+#### 重启 Obsidian
+
+设置环境变量后，**完全重启 Obsidian**（不只是刷新插件）。
+
+在插件设置中，你会看到：
+- ✓ Configured - API Key 已正确配置
+- ✗ Not configured - 环境变量未找到
+
+### 2️⃣ 选择 AI 提供商
+
+打开 Obsidian 设置 → PDF2MD：
 
 **选择 AI 提供商：**
 - 推荐：**阿里千问**（便宜，¥0.00345/页）
-- 备选：**OpenAI GPT-4o Mini**（快，¥0.003/页）
+- 备选：**OpenAI GPT**（快速，¥0.003/页）
 
-**填入 API Key：**
+**选择模型：** 可以自定义，默认值已预设。
 
-**方式 A：直接填入（推荐新手）**
-- 在设置中填入对应的 API Key
-- 插件会进行掩码处理保护你的密钥（只显示前 4 个字符）
-
-**方式 B：环境变量（推荐开发者）**
-- 设置系统环境变量，避免在插件中存储敏感信息
-- 插件会自动从环境变量中加载 Key
-
-### 2️⃣ 转换 PDF 为 Markdown
+### 3️⃣ 转换 PDF 为 Markdown
 
 1. 在 Obsidian 文件浏览器中找到你的 PDF 文件
 2. 右键点击该文件
@@ -85,31 +122,16 @@
        my_notes_gpt.md    (如果使用 OpenAI)
 ```
 
-## 获取 API Key
+## 成本信息
 
-### 🟡 阿里千问 (DashScope)
+### 价格对比 (A4 页面，200 DPI)
 
-**推荐：最便宜的选择，适合日常使用**
-
-1. 访问 [DashScope 控制台](https://dashscope.console.aliyun.com/apiKey)
-2. 登录或注册阿里云账号（支持淘宝/支付宝登录）
-3. 创建新的 API Key
-4. 复制 API Key，在插件设置中粘贴
-
-**成本：** ~¥0.00345/页（一分钱能转 3 页）
+| 提供商 | 模型 | 成本/页 | 速度 | 质量 |
+|---|---|---|---|---|
+| **阿里千问** 🏆 | qwen-vl-max | ¥0.00345 | 15-30秒 | 优秀 |
+| **OpenAI** | gpt-5.4-mini | ¥0.003 | 5-10秒 | 优秀+ |
 
 **首次使用有免费额度，非常适合小规模使用。**
-
-### 🔵 OpenAI
-
-**备选：速度快，识别质量最高**
-
-1. 访问 [OpenAI API 密钥管理](https://platform.openai.com/api-keys)
-2. 登录 OpenAI 账号
-3. 创建新的 API Key
-4. 复制 API Key，在插件设置中粘贴
-
-**成本：** ~$0.003/页（按 token 计费）
 
 ## 设置详解
 
@@ -118,6 +140,7 @@
 | 选项 | 默认值 | 说明 |
 |---|---|---|
 | **AI 提供商** | 阿里千问 | 选择使用的 AI 模型提供商 |
+| **API Key 状态** | 检测环境变量 | 显示环境变量配置状态（不允许编辑） |
 | **模型名称** | qwen-vl-max | 具体使用的模型，可自定义 |
 | **PDF 渲染 DPI** | 200 | 更高的 DPI 质量更好但速度更慢（范围：100-400） |
 | **API 超时** | 60 秒 | API 请求的最大等待时间 |
@@ -187,12 +210,20 @@
 
 ## 常见问题
 
+### Q: 插件提示"API Key not configured"？
+
+A: API Key 没有从环境变量中读取到。检查：
+- ✓ 环境变量是否正确设置（`DASHSCOPE_API_KEY` 或 `OPENAI_API_KEY`）
+- ✓ 重启了 Obsidian 吗？（必须完全重启，不只是刷新插件）
+- ✓ 变量名是否拼写正确（区分大小写）
+- ✓ 在插件设置中看是否显示 ✓ Found
+
 ### Q: 转换失败，显示"API 错误"？
 
 A: 检查以下项：
-- ✓ API Key 是否正确（复制时注意没有多余空格）
-- ✓ 账户是否有余额或额度
+- ✓ API Key 是否有效且有足够的额度
 - ✓ 网络连接是否正常
+- ✓ 账户配额是否已用完
 - ✓ 查看开发者控制台获取详细错误信息
 
 **打开开发者控制台：**
@@ -237,30 +268,6 @@ A: 需要在 Obsidian 中启用数学渲染插件：
 
 **推荐插件：** Obsidian 自带的数学支持，或安装 "MathJax" 插件
 
-### Q: 如何使用环境变量配置 API Key？
-
-A: 这样可以避免在插件中直接存储敏感信息。
-
-**Windows (PowerShell)：**
-```powershell
-# 阿里千问
-[System.Environment]::SetEnvironmentVariable('DASHSCOPE_API_KEY', 'sk-xxxx', 'User')
-
-# OpenAI
-[System.Environment]::SetEnvironmentVariable('OPENAI_API_KEY', 'sk-xxxx', 'User')
-```
-
-**Mac/Linux：**
-```bash
-# 编辑 ~/.bashrc 或 ~/.zshrc，添加：
-export DASHSCOPE_API_KEY=sk-xxxx
-export OPENAI_API_KEY=sk-xxxx
-
-# 然后重新加载配置
-source ~/.bashrc
-```
-
-**重启 Obsidian 后，插件会自动读取这些环境变量。**
 
 ### Q: API Key 显示为掩码，如何查看完整的 Key？
 
