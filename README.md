@@ -1,4 +1,4 @@
-# Handwritten2Formula (pdf2md) 
+# pdf2md
 
 A tool that converts handwritten notes into Markdown with LaTeX formulas using Alibaba's Qwen-VL multimodal large language model.
 
