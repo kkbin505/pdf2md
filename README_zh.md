@@ -1,6 +1,6 @@
-# Handwritten2Formula (pdf2md) ✍️ ➡️ 🔢
+# Handwritten2Formula (pdf2md) 
 
-一个使用阿里云通义千问 (Qwen-VL) 多模态大模型将手写笔记转换为带 LaTeX 公式的 Markdown 转换工具。
+一个使用多模态大模型将手写笔记转换为带 LaTeX 公式的 Markdown 转换工具。
 
 ## 📖 开发背景 (Background)
 
@@ -13,7 +13,7 @@
 
 ## 🚀 解决痛点
 
-**讯飞本 (iFlytek Smart Notebook)** 等电子墨水屏笔记设备虽然自带识别功能，但在处理**复杂数学公式**和**混合排版**时效果往往不尽如人意。
+**讯飞本 (iFlytek X2 Notebook)** 等电子墨水屏笔记设备虽然自带识别功能，但在处理**复杂数学公式**和**混合排版**时效果往往不尽如人意。
 
 本工具旨在解决这一问题：
 1. **高精度公式识别**：调用 Qwen-VL-Max 模型，能够精准识别复杂的手写数学公式并转换为标准的 LaTeX。
@@ -41,7 +41,11 @@
    ```
 
 3. **配置 API Key**:
-   在项目根目录创建 `.env` 文件，填入你的阿里云 DashScope API Key：
+   可以设置成环境变量
+    ```env
+   DASHSCOPE_API_KEY=your_api_key_here
+   ```
+   也可以在项目根目录创建 `.env` 文件，填入你的阿里云 DashScope API Key：
    ```env
    DASHSCOPE_API_KEY=your_api_key_here
    ```
@@ -66,6 +70,19 @@ python pdf2md.py your_notes.pdf
 
 以仓库中的 `Scratch.pdf` 为例，展示讯飞原装软件与本工具 (Qwen-VL) 的识别对比：
 
+
+![Original PDF](example/page1.jpg)
+
+## 讯飞
+
+![iFlytek OCR](example/iflytek.jpg)
+
+
+## 千问
+
+![Qwen-VL](example/qwen.jpg)
+
+
 ### 1. 泰勒展开与算子识别
 **手写内容：** 包含 Taylor 展开公式、$\nabla$ 算子、矩阵等。
 
@@ -81,10 +98,6 @@ python pdf2md.py your_notes.pdf
 | **本工具 (Qwen)** | `A = \begin{bmatrix} 1 & 13.1 & 619 & 23 \\ ... \end{bmatrix}` | ✅ 完美保留矩阵行列结构 |
 
 ---
-
-## 🤝 贡献与反馈
-
-欢迎提交 Issue 或 Pull Request！
 
 ## 📄 开源协议
 
