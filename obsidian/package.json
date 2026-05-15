@@ -1,6 +1,6 @@
 {
   "name": "obsidian-pdf2md",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Convert handwritten PDFs to Markdown with LaTeX formulas in Obsidian",
   "main": "main.js",
   "types": "main.d.ts",
