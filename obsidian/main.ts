@@ -41,16 +41,6 @@ export default class PDF2MDPlugin extends Plugin {
         }
       })
     );
-      this.app.vault.on('create', (file: TFile) => {
-        if (file.extension === 'pdf') {
-          this.addFileContextMenu();
-        }
-      })
-    );
-
-    this.app.workspace.onLayoutReady(() => {
-      this.addFileContextMenu();
-    });
   }
 
   private loadApiKeysFromEnv() {
@@ -83,19 +73,6 @@ export default class PDF2MDPlugin extends Plugin {
 
   private getApiKey(provider: string): string | null {
     return this.apiKeys.get(provider) || null;
-  }
-
-  private addFileContextMenu() {
-    this.app.workspace.on('file-menu', (menu, file) => {
-      if (file instanceof TFile && file.extension === 'pdf') {
-        menu.addItem(item =>
-          item
-            .setTitle('Convert to Markdown')
-            .setIcon('file-text')
-            .onClick(() => this.convertPdf(file))
-        );
-      }
-    });
   }
 
   private async convertPdf(file: TFile) {

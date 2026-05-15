@@ -22,7 +22,7 @@
 ### 快速安装
 1. Obsidian 设置 → 社区插件 → 搜索"PDF2MD"
 2. 安装并启用
-3. 在设置中配置 API Key
+3. 设置环境变量（DASHSCOPE_API_KEY 或 OPENAI_API_KEY）
 4. 右键 PDF → "Convert to Markdown"
 
 ---
@@ -45,7 +45,7 @@ pdf2md/
 → **[插件完整文档](obsidian/README_PLUGIN_ZH.md)**
 
 1. 从 Obsidian 插件市场安装
-2. 在设置中配置 API Key
+2. 设置环境变量（DASHSCOPE_API_KEY 或 OPENAI_API_KEY）
 3. 右键 PDF → "Convert to Markdown"
 
 ### 💻 Python 命令行工具
@@ -144,9 +144,9 @@ python python/pdf2md.py 你的笔记.pdf --provider openai
 ## 🔐 安全与隐私
 
 ✅ **API Key 安全**：
-- 本地存储，在 Obsidian 中加密
-- 支持环境变量方式（无需硬写）
+- 仅从环境变量读取 - **不存储到磁盘**
 - 设置中掩码显示
+- 无硬写、无本地存储
 
 ✅ **数据隐私**：
 - PDF 仅在转换时发送到 AI API

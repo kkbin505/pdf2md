@@ -22,7 +22,7 @@ An all-in-one Obsidian plugin that converts handwritten PDFs to Markdown in a si
 ### Quick Install
 1. Obsidian Settings → Community Plugins → Search "PDF2MD"
 2. Install and enable
-3. Configure API key in settings
+3. Set environment variables (DASHSCOPE_API_KEY or OPENAI_API_KEY)
 4. Right-click PDF → "Convert to Markdown"
 
 ---
@@ -45,7 +45,7 @@ pdf2md/
 → **[Full Plugin Documentation](obsidian/README_PLUGIN.md)**
 
 1. Install from Obsidian plugin marketplace
-2. Configure API key in settings
+2. Set environment variables (DASHSCOPE_API_KEY or OPENAI_API_KEY)
 3. Right-click PDF → "Convert to Markdown"
 
 ### 💻 Python Command-Line Tool
@@ -144,9 +144,9 @@ See actual output from different models on the same input:
 ## 🔐 Security & Privacy
 
 ✅ API keys are secure:
-- Stored locally, encrypted in Obsidian
-- Support for environment variables (no hardcoding)
+- Read from environment variables only - **not stored on disk**
 - Masked display in settings
+- No hardcoding or local file storage
 
 ✅ Your data is private:
 - PDFs only sent to AI APIs during conversion
