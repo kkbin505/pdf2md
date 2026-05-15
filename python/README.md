@@ -62,8 +62,6 @@ Options:
   -o, --output OUTPUT_PATH         Output file path
   -k, --api-key KEY                Direct API key (or use env var)
   --dpi DPI                        PDF rendering DPI (default: 200)
-  --timeout SECONDS                API timeout (default: 60)
-  --max-retries N                  Retry attempts (default: 3)
 ```
 
 ## 📊 Cost Comparison
