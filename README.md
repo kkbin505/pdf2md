@@ -2,7 +2,7 @@
 
 Convert handwritten notes to Markdown with LaTeX formulas using AI. Available as both a **Command-Line Tool** and **Obsidian Plugin**.
 
-**[中文文档](README_ZH.md)** | **English**
+**[中文文档](README_zh.md)** | **English**
 
 ---
 
