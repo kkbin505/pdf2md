@@ -19,10 +19,10 @@ dist/
 *.swo
 *~
 
-# Build outputs (Obsidian plugin)
-main.js
-main.d.ts
-pdf.worker.min.js
+# Build outputs (Obsidian plugin) - KEEP THESE for plugin distribution
+# main.js         <- Needed for Obsidian plugin submission
+# main.d.ts       <- Needed for TypeScript types
+# pdf.worker.min.js <- Needed for PDF.js worker
 
 # Dependencies
 node_modules/
