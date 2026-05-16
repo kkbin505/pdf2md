@@ -21,7 +21,7 @@ An all-in-one Obsidian plugin that converts handwritten PDFs to Markdown in a si
 
 **Method 1: Obsidian Plugin Marketplace (Recommended)**
 1. Open Obsidian → Settings → Community Plugins
-2. Search for "PDF2MD"
+2. Search for "pdf2md"
 3. Click Install and Enable
 
 **Method 2: Manual Installation**
@@ -39,7 +39,7 @@ An all-in-one Obsidian plugin that converts handwritten PDFs to Markdown in a si
 
 **1️⃣ Configure Environment Variables**
 
-**Important:** PDF2MD reads API keys from environment variables only. No API keys are stored on disk. This is more secure.
+**Important:** pdf2md reads API keys from environment variables only. No API keys are stored on disk. This is more secure.
 
 **Get Your API Keys:**
 - **Alibaba Qwen (Recommended):** https://dashscope.console.aliyun.com/apiKey
@@ -93,7 +93,7 @@ Output: my_notes_qwen.md   (if using Qwen)
 | Provider | Model | Cost/Page | Speed | Quality |
 |---|---|---|---|---|
 | **Alibaba Qwen** 🏆 | qwen-vl-max | ¥0.00345 | 15-30s | Excellent |
-| **OpenAI** | gpt-5.4-mini | ¥0.003 | 5-10s | Excellent+ |
+| **OpenAI** | gpt-5.4-mini | $0.003 | 5-10s | Excellent+ |
 
 ### Plugin Settings
 
@@ -142,14 +142,7 @@ python python/pdf2md.py your_notes.pdf --dpi 300
 
 ---
 
-## 📊 Performance
-
-### Cost Comparison (A4 page, 200 DPI)
-
-| Provider | Model | Cost/Page | Speed | Quality | When to Use |
-|---|---|---|---|---|---|
-| **Qwen** 🏆 | qwen-vl-max | ¥0.00345 | 15-30s | Excellent | Cost-sensitive, daily use |
-| **OpenAI** | gpt-5.4-mini | ¥0.003 | 5-10s | Excellent+ | Need speed, highest accuracy |
+## 📊 Performanc
 
 ### Real Results
 
