@@ -1,4 +1,9 @@
+# Environment variables (security)
 .env
+.env.local
+.env.*.local
+
+# Python (legacy)
 __pycache__/
 *.pyc
 venv/
@@ -6,8 +11,34 @@ venv/
 build/
 dist/
 *.egg-info/
+
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+
+# Build outputs (Obsidian plugin)
+main.js
+main.d.ts
+pdf.worker.min.js
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime/Cache
+*.log
+.obsidian/
+data.json
+
+# Test/Temp files
 optimalcontrolHW3.pdf
 optimalcontrolHW3.md
 PLAN.md
