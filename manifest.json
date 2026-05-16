@@ -1,5 +1,5 @@
 {
-  "id": "handwritten-pdf-markdown",
+  "id": "pdf2md",
   "name": "PDF to Markdown",
   "version": "0.1.0",
   "minAppVersion": "0.15.0",
