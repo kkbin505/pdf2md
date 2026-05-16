@@ -22,8 +22,7 @@ pdf2md/
 ├── pdf.worker.min.js       ← PDF.js worker（1.1MB）
 ├── package.json            ← 依赖配置
 ├── README.md               ← 英文文档
-├── README_ZH.md            ← 中文文档（可选）
-└── README_PLUGIN_ZH.md     ← 插件中文指南（可选）
+└── README_zh.md            ← 中文文档
 ```
 
 重新编译确保最新：
@@ -106,7 +105,7 @@ git push origin 1.0.0
      Installation:
      1. In Obsidian: Settings → Community Plugins → Search "PDF2MD"
      2. Click Install and Enable
-     3. Configure API key in plugin settings
+     3. Set environment variables (DASHSCOPE_API_KEY or OPENAI_API_KEY)
      4. Right-click PDF → "Convert to Markdown"
      ```
 
@@ -134,7 +133,7 @@ git push origin 1.0.0
    在文件中找到合适的位置（按字母顺序），添加：
    ```json
    {
-     "id": "obsidian-pdf2md",
+     "id": "pdf2md",
      "name": "PDF2MD",
      "author": "kkbin505",
      "description": "Convert handwritten PDFs to Markdown with LaTeX formulas using AI (OpenAI or Qwen)",
@@ -157,10 +156,10 @@ git push origin 1.0.0
      Add PDF2MD plugin - Convert handwritten PDFs to Markdown using AI
      
      **Plugin Details:**
-     - ID: obsidian-pdf2md
+     - ID: pdf2md
      - Repository: kkbin505/pdf2md
-     - Supported Models: Qwen VL Max, OpenAI GPT-4o Mini
-     - Latest Release: v1.0.0
+     - Supported Models: Qwen VL Max, OpenAI GPT-5.4 Mini
+     - Latest Release: v0.1.0
      
      **Features:**
      - PDF to Markdown conversion with LaTeX formula support
