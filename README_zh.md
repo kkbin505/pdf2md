@@ -13,45 +13,115 @@
 **核心功能：**
 - 📄 右键 PDF → "Convert to Markdown"
 - 🤖 支持千问（¥0.00345/页）和 OpenAI（最快）
-- 📊 实时进度提示，显示转换状态
+- 📊 实时进度提示，显示转换状态和耗时
 - 🔐 API Key 安全管理（掩码显示）
 - ⚙️ 可配置 DPI、超时、重试、文件冲突处理
 
-→ **[📖 插件完整文档](obsidian/README_PLUGIN_ZH.md)** | **[📖 English](obsidian/README_PLUGIN.md)**
+### 插件安装
 
-### 快速安装
-1. Obsidian 设置 → 社区插件 → 搜索"PDF2MD"
-2. 安装并启用
-3. 设置环境变量（DASHSCOPE_API_KEY 或 OPENAI_API_KEY）
-4. 右键 PDF → "Convert to Markdown"
+**方式一：Obsidian 插件市场（推荐）**
+1. 打开 Obsidian → 设置 → 社区插件
+2. 搜索 "PDF2MD"
+3. 点击安装并启用
+
+**方式二：手动安装**
+1. 从 [GitHub Releases](https://github.com/kkbin505/pdf2md/releases) 下载最新版本
+2. 将文件复制到你的 Vault：
+   ```
+   <你的Vault>/.obsidian/plugins/pdf2md/
+   ├── main.js
+   ├── pdf.worker.min.js
+   └── manifest.json
+   ```
+3. 重启 Obsidian 并启用插件
+
+### 插件快速开始
+
+**1️⃣ 配置环境变量**
+
+**重要：** PDF2MD 不在本地存储 API Key，只从环境变量读取。这样更安全。
+
+**获取 API Key：**
+- **阿里千问（推荐）：** https://dashscope.console.aliyun.com/apiKey
+- **OpenAI：** https://platform.openai.com/api-keys
+
+**设置环境变量：**
+
+**Windows (PowerShell - 以管理员身份运行)：**
+```powershell
+# 阿里千问
+[System.Environment]::SetEnvironmentVariable('DASHSCOPE_API_KEY', 'sk-xxx...', 'User')
+
+# OpenAI
+[System.Environment]::SetEnvironmentVariable('OPENAI_API_KEY', 'sk-proj-xxx...', 'User')
+```
+
+**Mac/Linux：**
+```bash
+# 编辑 ~/.bashrc 或 ~/.zshrc (Mac 用户用 ~/.zprofile)，添加：
+export DASHSCOPE_API_KEY='sk-xxx...'
+export OPENAI_API_KEY='sk-proj-xxx...'
+
+# 保存后，重新加载配置：
+source ~/.bashrc  # 或 source ~/.zshrc
+```
+
+**⚠️ 完全重启 Obsidian**（不只是刷新插件）。
+
+**2️⃣ 选择 AI 提供商**
+
+打开 Obsidian 设置 → PDF2MD：
+- **AI 提供商：** 选择千问（便宜）或 OpenAI（快速）
+- **模型名称：** 可自定义，默认值已预设
+
+**3️⃣ 转换 PDF**
+
+1. 在 Obsidian 文件浏览器中找到你的 PDF
+2. 右键 → **"Convert to Markdown"**
+3. 等待转换完成（进度条显示状态）
+4. 转换好的 `.md` 自动保存在同目录
+
+```
+示例：
+输入:  my_notes.pdf
+输出:  my_notes_qwen.md   (使用千问)
+       my_notes_gpt.md    (使用 OpenAI)
+```
+
+### 支持的 AI 模型
+
+| 提供商 | 模型 | 成本/页 | 速度 | 质量 |
+|---|---|---|---|---|
+| **阿里千问** 🏆 | qwen-vl-max | ¥0.00345 | 15-30秒 | 优秀 |
+| **OpenAI** | gpt-5.4-mini | ¥0.003 | 5-10秒 | 优秀+ |
+
+### 插件设置详解
+
+| 选项 | 默认值 | 说明 |
+|---|---|---|
+| **AI 提供商** | 千问 | 选择使用的 AI 模型提供商 |
+| **API Key 状态** | 自动检测 | 显示环境变量配置状态（只读） |
+| **模型名称** | qwen-vl-max | 具体使用的模型，可自定义 |
+| **PDF 渲染 DPI** | 200 | 更高的 DPI 质量更好但速度更慢（100-400） |
+| **API 超时** | 60 秒 | API 请求的最大等待时间 |
+| **最大重试次数** | 3 | 请求失败时的重试次数 |
+| **文件冲突处理** | 按模型命名 | 输出文件已存在时的处理方式 |
+
+**文件冲突处理策略：**
+- **覆盖：** 直接覆盖已存在的文件（⚠️ 会丢失之前的内容）
+- **跳过：** 如果文件已存在则不生成新文件
+- **时间戳：** 在文件名中添加时间戳
+- **按模型命名（推荐）：** 在文件名中添加模型名称（如 `my_notes_qwen.md`）
 
 ---
 
-## 📂 两种使用方式
+## 💻 Python 命令行工具
 
-```
-pdf2md/
-├── 🔌 obsidian/     ← Obsidian 插件（交互式）
-│                     从插件市场安装
-│                     右键 PDF 即可转换
-│
-└── 💻 python/       ← Python 命令行工具（批量）
-                     用于自动化和批量处理
-```
-
-### 🔌 Obsidian 插件
-**适合场景**：Obsidian 用户、交互式使用、单个文件转换
-
-→ **[插件完整文档](obsidian/README_PLUGIN_ZH.md)**
-
-1. 从 Obsidian 插件市场安装
-2. 设置环境变量（DASHSCOPE_API_KEY 或 OPENAI_API_KEY）
-3. 右键 PDF → "Convert to Markdown"
-
-### 💻 Python 命令行工具
-**适合场景**：批量处理、自动化脚本
+**适合场景：** 批量处理、自动化脚本
 
 → **[工具完整文档](python/README.md)**
+
+### 快速开始
 
 ```bash
 # 安装依赖
@@ -62,25 +132,31 @@ python python/pdf2md.py 你的笔记.pdf
 
 # 使用 OpenAI（更快）
 python python/pdf2md.py 你的笔记.pdf --provider openai
+
+# 自定义输出路径
+python python/pdf2md.py 你的笔记.pdf -o 我的输出.md
+
+# 更高质量（更慢）
+python python/pdf2md.py 你的笔记.pdf --dpi 300
 ```
 
 ---
 
-## ✨ 最新版本 (v1.0.0)
+## 📊 性能对比
 
-### 🔌 Obsidian 插件（全新！）
-- 完整的 Obsidian 插件实现
-- 支持千问和 OpenAI 模型
-- 设置面板：DPI、超时、重试等选项
-- 文件冲突智能处理
-- 实时进度追踪
-- API Key 掩码和环境变量支持
+### 成本对比（A4 页面，200 DPI）
 
-### 💻 Python 工具
-- 稳定的命令行工具
-- 支持多个 AI 提供商
-- 批量处理能力
-- 详细的日志和错误处理
+| 提供商 | 模型 | 成本/页 | 速度 | 质量 | 最适合 |
+|---|---|---|---|---|---|
+| **千问** 🏆 | qwen-vl-max | ¥0.00345 | 15-30秒 | 优秀 | 成本敏感、日常使用 |
+| **OpenAI** | gpt-5.4-mini | ¥0.003 | 5-10秒 | 优秀+ | 需要速度、最高准确度 |
+
+### 实际效果
+
+查看不同模型对同一输入的真实输出：
+- [千问结果](python/example/Scratch_qwen.md) - 性价比最优
+- [OpenAI 结果](python/example/Scratch_openai.md) - 准确度最高
+- [原始 PDF](python/example/Scratch.pdf) - 输入示例
 
 ---
 
@@ -123,24 +199,6 @@ python python/pdf2md.py 你的笔记.pdf --provider openai
 
 ---
 
-## 📊 性能对比
-
-### 成本对比（A4 页面，200 DPI）
-
-| 提供商 | 模型 | 成本/页 | 速度 | 质量 | 最适合 |
-|---|---|---|---|---|---|
-| **千问** 🏆 | qwen-vl-max | ¥0.00345 | 15-30秒 | 优秀 | 成本敏感、日常使用 |
-| **OpenAI** | gpt-4o-mini | ¥0.003 | 5-10秒 | 优秀+ | 需要速度、最高准确度 |
-
-### 实际效果
-
-查看不同模型对同一输入的真实输出：
-- [千问结果](python/example/Scratch_qwen.md) - 性价比最优
-- [OpenAI 结果](python/example/Scratch_openai.md) - 准确度最高
-- [原始 PDF](python/example/Scratch.pdf) - 输入示例
-
----
-
 ## 🔐 安全与隐私
 
 ✅ **API Key 安全**：
@@ -153,14 +211,57 @@ python python/pdf2md.py 你的笔记.pdf --provider openai
 - 插件不存储或缓存你的文件
 - 完全掌控你的数据
 
+✅ **开源透明**：
+- 代码完全开源，GitHub 可审查
+- 无后门，无追踪，无数据收集
+
+---
+
+## ❓ 常见问题
+
+### Q: 插件提示"API Key not configured"？
+**A:** API Key 没有从环境变量中读取到。检查：
+- ✓ 环境变量是否正确设置（DASHSCOPE_API_KEY 或 OPENAI_API_KEY）
+- ✓ 重启了 Obsidian 吗？（必须完全重启，不只是刷新插件）
+- ✓ 变量名是否拼写正确（区分大小写）
+
+### Q: 转换失败，显示"API 错误"？
+**A:** 检查以下项：
+- ✓ API Key 是否有效且有足够的额度
+- ✓ 网络连接是否正常
+- ✓ 账户配额是否已用完
+
+### Q: 转换超时？
+**A:** 尝试以下方案：
+1. 增加超时时间（设置 → 60秒 → 90秒）
+2. 降低 DPI（200 → 150）使转换更快
+3. 检查网络速度
+4. 尝试换用更快的模型（千问 → OpenAI）
+
+### Q: 为什么输出结果有时不完美？
+**A:** 质量受以下因素影响：
+- 📄 PDF 的清晰度（扫描 vs 拍照）
+- ✍️ 手写笔迹的工整度
+- 🧮 公式的复杂程度
+- 🤖 模型的能力
+
+**改进建议：**
+- 提高 DPI 以获得更清晰的渲染
+- 使用更强的模型（OpenAI 通常更准确）
+- 接受少量错误并手动修正
+
+### Q: 输出的 LaTeX 公式无法在 Obsidian 中渲染？
+**A:** 需要在 Obsidian 中启用数学渲染：
+1. 安装数学渲染插件（如 MathJax）
+2. 在 设置 → 社区插件 中启用
+3. 刷新 Obsidian
+
 ---
 
 ## 📚 文档导航
 
 | 文档 | 用途 |
 |---|---|
-| [Obsidian 插件说明](obsidian/README_PLUGIN_ZH.md) | 完整插件指南 |
-| [Obsidian Plugin Docs](obsidian/README_PLUGIN.md) | Complete plugin guide (English) |
 | [Python 工具说明](python/README.md) | Python 命令行使用 |
 | [发布指南](RELEASE_GUIDE.md) | 如何发布插件 |
 
