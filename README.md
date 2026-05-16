@@ -87,6 +87,15 @@ Input:  my_notes.pdf
 Output: my_notes_qwen.md   (if using Qwen)
         my_notes_gpt.md    (if using OpenAI)
 ```
+![pdf](python\example\page1.jpg)
+
+### Qwen
+
+![pdf](python\example\gpt5.4-mini.jpg)
+
+### GPT
+
+![pdf](python\example\qwen.jpg)
 
 ### Supported AI Models
 
@@ -256,7 +265,6 @@ This project solves that gap with two complementary tools:
 | Document | Purpose |
 |---|---|
 | [Python Tool Docs](python/README.md) | Python CLI usage guide |
-| [Release Guide](RELEASE_GUIDE.md) | How to publish the plugin |
 
 ---
 

@@ -88,6 +88,17 @@ source ~/.bashrc  # 或 source ~/.zshrc
        my_notes_gpt.md    (使用 OpenAI)
 ```
 
+![pdf](python\example\page1.jpg)
+
+### Qwen
+
+![pdf](python\example\gpt5.4-mini.jpg)
+
+### GPT
+
+![pdf](python\example\qwen.jpg)
+
+
 ### 支持的 AI 模型
 
 | 提供商 | 模型 | 成本/页 | 速度 | 质量 |
@@ -242,7 +253,6 @@ python python/pdf2md.py 你的笔记.pdf --dpi 300
 | 文档 | 用途 |
 |---|---|
 | [Python 工具说明](python/README.md) | Python 命令行使用 |
-| [发布指南](RELEASE_GUIDE.md) | 如何发布插件 |
 
 ---
 

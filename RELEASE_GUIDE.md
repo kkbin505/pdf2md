@@ -144,7 +144,7 @@ git push origin 1.0.0
 4. **提交并推送**
    ```bash
    git add community-plugins.json
-   git commit -m "Add PDF2MD plugin to community plugins"
+   git commit -m "Add pdf2md plugin to community plugins"
    git push origin main
    ```
 
