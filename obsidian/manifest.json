@@ -1,5 +1,5 @@
 {
-  "id": "obsidian-pdf2md",
+  "id": "pdf2md_plugin",
   "name": "PDF to Markdown",
   "version": "0.1.0",
   "minAppVersion": "0.15.0",
