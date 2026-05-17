@@ -1,6 +1,8 @@
 # pdf2md
 
-Convert handwritten notes to Markdown with LaTeX formulas using AI. Available as both a **Command-Line Tool** and **Obsidian Plugin**.
+Writing by hand aligns more naturally with the flow of thought than typing in my mind.
+
+This toll converts handwritten notes to Markdown using AI. Available as both a **Python Tool** and **Obsidian Plugin**.
 
 **[中文文档](README_zh.md)** | **English**
 
